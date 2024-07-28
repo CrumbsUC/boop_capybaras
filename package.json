@@ -1,5 +1,11 @@
 {
+  "type": "module",
   "dependencies": {
+    "@unique-nft/accounts": "^0.3.7",
+    "@unique-nft/sdk": "^0.7.7",
+    "@unique-nft/sr25519": "^0.0.2",
+    "connect-sdk-client-js": "^6.0.1",
+    "dotenv": "^16.4.5",
     "web3": "^4.11.1"
   }
 }
