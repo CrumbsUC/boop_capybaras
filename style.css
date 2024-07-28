@@ -7,15 +7,3 @@ body {
     height: 100vh;
     border: 1px solid black;
 }
-  
-#capture-button {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    z-index: 1;
-    background-color: #fff;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
