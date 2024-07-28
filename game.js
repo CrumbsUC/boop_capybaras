@@ -129,14 +129,36 @@ function gameLoop() {
       image.vy = -image.vy;
     }
 
-    if (image.vx < 0) {
-      ctx.save();
-      ctx.translate(image.x + image.image.width, image.y);
-      ctx.scale(-1, 1);
-      ctx.drawImage(image.image, 0, 0);
-      ctx.restore();
+    // Check if the image should fade out
+    if (image.fadeOut) {
+      const fadeOutTime = image.fadeOut;
+      const currentTime = Date.now();
+      const fadeDuration = 1000; // 2 seconds
+      const opacity = 1 - (currentTime - fadeOutTime) / fadeDuration;
+
+      if (opacity <= 0) {
+        // Remove the image from the array
+        images.splice(images.indexOf(image), 1);
+      } else {
+        ctx.save();
+        ctx.globalAlpha = opacity;
+        if (image.vx < 0) {
+          ctx.translate(image.x + image.image.width, image.y);
+          ctx.scale(-1, 1);
+        }
+        ctx.drawImage(image.image, image.vx < 0 ? 0 : image.x, image.vy < 0 ? 0 : image.y);
+        ctx.restore();
+      }
     } else {
-      ctx.drawImage(image.image, image.x, image.y);
+      if (image.vx < 0) {
+        ctx.save();
+        ctx.translate(image.x + image.image.width, image.y);
+        ctx.scale(-1, 1);
+        ctx.drawImage(image.image, 0, 0);
+        ctx.restore();
+      } else {
+        ctx.drawImage(image.image, image.x, image.y);
+      }
     }
   });
 
@@ -188,8 +210,11 @@ function captureImage() {
       // Stop the capybara from moving
       image.vx = 0;
       image.vy = 0;
+      // Set a fade-out timer
+      image.fadeOut = Date.now();
     }
   });
+
 
   frameCanvas.toBlob((blob) => {
     const formData = new FormData();
@@ -207,9 +232,8 @@ function captureImage() {
     })
     .then((response) => response.json())
     .then((data) => {
-      const imgurImageUrl = data.data.link;
-      console.log(`Image uploaded to Imgur: ${imgurImageUrl}`);
-      localStorage.setItem('imgurImageUrl', imgurImageUrl);
+      const imageUrl = data.data.link;
+      console.log(`Image uploaded to Imgur: ${imageUrl}`);
     })
     .catch((error) => {
       console.error('Error uploading image to Imgur:', error);
@@ -222,7 +246,7 @@ function captureImage() {
     console.log(capybarasInFrame);
     localStorage.setItem('highScore', capybarasInFrame);
   }
-
+  
   // Redraw the frame
   ctx.drawImage(frame, frameX, frameY, frame.width, frame.height);
 
