@@ -192,10 +192,20 @@ document.addEventListener('keydown', (event) => {
   }
 });
 
-let imgurImageUrl = null;
+export function getHighScore() {
+  return localStorage.getItem('highScore');
+}
 
-export function setImgurImageUrl(url) {
-  imgurImageUrl = url;
+export function setHighScore(score) {
+  localStorage.setItem('highScore', score);
+}
+
+export function getImageUrl() {
+  return localStorage.getItem('imageUrl');
+}
+
+export function setImageUrl(url) {
+  localStorage.setItem('imageUrl', url);
 }
 
 function captureImage() {
@@ -239,7 +249,7 @@ function captureImage() {
     .then((data) => {
       const imageUrl = data.data.link;
       console.log(`Image uploaded to Imgur: ${imageUrl}`);
-      setImgurImageUrl(imageUrl);
+      setImageUrl(imageUrl);
     })
     .catch((error) => {
       console.error('Error uploading image to Imgur:', error);
