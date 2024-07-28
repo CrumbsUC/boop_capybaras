@@ -12,7 +12,7 @@ canvas.height = window.innerHeight;
 
 // Load the background image
 const background = new Image();
-background.src = 'background.png';
+background.src = 'Background.png';
 
 // Load the frame image
 const frame = new Image();
