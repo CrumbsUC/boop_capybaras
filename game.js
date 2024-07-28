@@ -36,9 +36,11 @@ function getRandomItem(arr) {
 // Define the list of capybara images
 const capybaraImages = [
   '/Sprites/Witch-Capybara.png',
-  'Sprites/Wizard-Capybara.png',
+  '/Sprites/Wizard-Capybara.png',
   '/Sprites/Base-Capybara.png',
   '/Sprites/TopHat-Capybara.png',
+  '/Sprites/Fly-Capybara.png',
+  '/Sprites/Long-Capybara.png'
 ];
 
 // Define the number of capybaras
