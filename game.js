@@ -129,36 +129,14 @@ function gameLoop() {
       image.vy = -image.vy;
     }
 
-    // Check if the image should fade out
-    if (image.fadeOut) {
-      const fadeOutTime = image.fadeOut;
-      const currentTime = Date.now();
-      const fadeDuration = 1000; // 2 seconds
-      const opacity = 1 - (currentTime - fadeOutTime) / fadeDuration;
-
-      if (opacity <= 0) {
-        // Remove the image from the array
-        images.splice(images.indexOf(image), 1);
-      } else {
-        ctx.save();
-        ctx.globalAlpha = opacity;
-        if (image.vx < 0) {
-          ctx.translate(image.x + image.image.width, image.y);
-          ctx.scale(-1, 1);
-        }
-        ctx.drawImage(image.image, image.vx < 0 ? 0 : image.x, image.vy < 0 ? 0 : image.y);
-        ctx.restore();
-      }
+    if (image.vx < 0) {
+      ctx.save();
+      ctx.translate(image.x + image.image.width, image.y);
+      ctx.scale(-1, 1);
+      ctx.drawImage(image.image, 0, 0);
+      ctx.restore();
     } else {
-      if (image.vx < 0) {
-        ctx.save();
-        ctx.translate(image.x + image.image.width, image.y);
-        ctx.scale(-1, 1);
-        ctx.drawImage(image.image, 0, 0);
-        ctx.restore();
-      } else {
-        ctx.drawImage(image.image, image.x, image.y);
-      }
+      ctx.drawImage(image.image, image.x, image.y);
     }
   });
 
@@ -192,6 +170,8 @@ document.addEventListener('keydown', (event) => {
   }
 });
 
+let imgurImageUrl;
+
 function captureImage() {
   // Capture the current view
   const frameWidth = canvas.width / 3;
@@ -210,11 +190,8 @@ function captureImage() {
       // Stop the capybara from moving
       image.vx = 0;
       image.vy = 0;
-      // Set a fade-out timer
-      image.fadeOut = Date.now();
     }
   });
-
 
   frameCanvas.toBlob((blob) => {
     const formData = new FormData();
@@ -232,8 +209,8 @@ function captureImage() {
     })
     .then((response) => response.json())
     .then((data) => {
-      const imageUrl = data.data.link;
-      console.log(`Image uploaded to Imgur: ${imageUrl}`);
+      imgurImageUrl = data.data.link;
+      console.log(`Image uploaded to Imgur: ${imgurImageUrl}`);
     })
     .catch((error) => {
       console.error('Error uploading image to Imgur:', error);
