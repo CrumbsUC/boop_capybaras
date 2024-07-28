@@ -14,6 +14,11 @@ canvas.height = window.innerHeight;
 const background = new Image();
 background.src = 'Sprites/Background.png';
 
+
+// DO DO DO OD DOO DO
+let mySound = new Audio('MySong.m4a')
+mySound.play()
+
 // Load the frame image
 const frame = new Image();
 frame.src = 'Sprites/Frame.png';
