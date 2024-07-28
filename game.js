@@ -7,9 +7,9 @@ const ctx = canvas.getContext('2d');
 const captureButton = document.getElementById('capture-button');
 
 // DO DO DO OD DOO DO
-let bgMusic = new Audio('MySong.m4a')
-bgMusic.loop = true;
-bgMusic.play()
+let song = new Audio('MySong.m4a')
+song.loop = true;
+song.play()
 
 // Set the canvas dimensions to fit the window
 canvas.width = window.innerWidth;
@@ -147,6 +147,8 @@ function gameLoop() {
   if (flash && Date.now() < flashTimeout) {
     ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+    let camera = new Audio('camera-shutter-199580.mp3');
+    camera.play()
   } else {
     flash = false;
   }
