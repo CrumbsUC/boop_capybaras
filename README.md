@@ -12,11 +12,11 @@ Capybara Catch brings a fresh take to the picture game genre, allowing gamers to
 
 ## Instructions 
 How many capybaras can you collect in your picture? This game tests your reaction time and skill on taking a picture with the most capybaras. Then choose from the three pictures and mint a personal NFT.
-Move the frame with W-A-S-D until you find the perfect shot. Press space as fast as you can with as many Cabybaras. The picture is then minted into a NFT on Polkadot.
+Move the frame with W-A-S-D until you find the perfect shot. Press space as fast as you can with as many Cabybaras. The picture is then minted into a NFT on UniqueScan.
 
 ## Full Description
 
-NFTs are widely thought as a monetary investments but we wanted to shift the focus towards the gaming side. Our goal was to use the Polkadot blockchain as a secure photo gallery for storing NFTs. We leveraged the Unique Network, powered by Polkadot, to upload the pictures quickly and safely. 
+NFTs are widely viewed as a monetary investment. We want to shift the focus of NFTs to use them to capture your favorite moments in gaming. Our goal was to use the Polkadot blockchain as a secure photo gallery for storing NFT. We leveraged the Unique Network, powered by Polkadot, to upload the pictures quickly and safely. 
 
 # Features - 
 ***Unique network*** powered by Polkadot for minting NFTS.
