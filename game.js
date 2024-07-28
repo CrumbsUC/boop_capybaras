@@ -6,20 +6,19 @@ const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 const captureButton = document.getElementById('capture-button');
 
-// DO DO DO OD DOO DO
-let song = new Audio('MySong.m4a')
+// Play background music
+let song = new Audio('MySong.m4a');
 song.loop = true;
-song.play()
+song.play();
 
 // Set the canvas dimensions to fit the window
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-// Load the background image
+// Load the background and frame images
 const background = new Image();
 background.src = 'Sprites/Background.png';
 
-// Load the frame image
 const frame = new Image();
 frame.src = 'Sprites/Frame.png';
 
@@ -40,14 +39,28 @@ frame.onload = () => {
   }
 };
 
+// Variables for frame position and speed
+let frameX = (canvas.width - frame.width) / 2;
+let frameY = (canvas.height - frame.height) / 2;
+const frameSpeed = 5;
+
+// Object to track which keys are pressed
+const keysPressed = {};
+
+// Function to handle keydown events
+document.addEventListener('keydown', (event) => {
+  keysPressed[event.key.toLowerCase()] = true;
+});
+
+// Function to handle keyup events
+document.addEventListener('keyup', (event) => {
+  keysPressed[event.key.toLowerCase()] = false;
+});
+
+// Function to get a random item from an array
 function getRandomItem(arr) {
-  // get random index value
   const randomIndex = Math.floor(Math.random() * arr.length);
-
-  // get random item
-  const item = arr[randomIndex];
-
-  return item;
+  return arr[randomIndex];
 }
 
 // Define the list of capybara images
@@ -60,62 +73,47 @@ const capybaraImages = [
   '/Sprites/Long-Capybara.png'
 ];
 
-// Define the number of capybaras
+// Define the number of capybaras and create image objects
 const numCapybaras = 30;
-
-// Define the image objects
 const images = [];
 
 let tries = 3;
 let flash = false;
 let flashTimeout = 0;
 
-let gameRunning = false;
-
-// Load the images and set random positions, speeds, and directions
+// Load images and set random positions, speeds, and directions
 for (let i = 0; i < numCapybaras; i++) {
   const image = new Image();
   image.src = getRandomItem(capybaraImages);
 
-  // Wait for the image to load
   image.onload = () => {
-    // Random position
     const x = Math.random() * (canvas.width - image.width);
     const y = Math.random() * (canvas.height - image.height);
 
-    // Random speed and direction
     let vx, vy;
     do {
-      vx = Math.random() * 8 - 4;
-      vy = Math.random() * 8 - 4;
-    } while (Math.abs(vx) < 2 || Math.abs(vy) < 2); // Ensure vx and vy are not 0
+      vx = Math.random() * 6 - 3;
+      vy = Math.random() * 6 - 3;
+    } while (Math.abs(vx) < 0.3 || Math.abs(vy) < 0.3);
 
     images.push({ x, y, vx, vy, image });
   };
 }
 
-// Define the game loop
+// Game loop function
 function gameLoop() {
   // Clear the canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // Draw the background image
+  // Draw the background
   ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
-
-  // Draw the frame image, scaled to half the width and height of the canvas
-  const frameWidth = canvas.width / 3;
-  const frameHeight = canvas.height / 3;
-  const frameX = (canvas.width - frameWidth) / 2;
-  const frameY = (canvas.height - frameHeight) / 2;
-  ctx.drawImage(frame, 0, 0, frame.width, frame.height, frameX, frameY, frameWidth, frameHeight);
 
   // Update and draw each image
   images.forEach((image) => {
-    // Update the image position
     image.x += image.vx;
     image.y += image.vy;
+    image.y += Math.sin(Date.now() / 50) * 2;
 
-    // Bounce off the edges
     if (image.x + image.image.width > canvas.width) {
       image.x = canvas.width - image.image.width;
       image.vx = -image.vx;
@@ -131,7 +129,6 @@ function gameLoop() {
       image.vy = -image.vy;
     }
 
-    // Draw the image with flipping effect
     if (image.vx < 0) {
       ctx.save();
       ctx.translate(image.x + image.image.width, image.y);
@@ -143,12 +140,21 @@ function gameLoop() {
     }
   });
 
-  // Flash white if an image has been captured
+  // Update frame position based on key presses
+  if (keysPressed['w']) frameY = Math.max(0, frameY - frameSpeed);
+  if (keysPressed['s']) frameY = Math.min(canvas.height - frame.height, frameY + frameSpeed);
+  if (keysPressed['a']) frameX = Math.max(0, frameX - frameSpeed);
+  if (keysPressed['d']) frameX = Math.min(canvas.width - frame.width, frameX + frameSpeed);
+
+  // Draw the frame
+  ctx.drawImage(frame, frameX, frameY);
+
+  // Flash effect when capturing
   if (flash && Date.now() < flashTimeout) {
     ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     let camera = new Audio('camera-shutter-199580.mp3');
-    camera.play()
+    camera.play();
   } else {
     flash = false;
   }
@@ -157,88 +163,71 @@ function gameLoop() {
   requestAnimationFrame(gameLoop);
 }
 
+// Function to handle space key for capturing
 document.addEventListener('keydown', (event) => {
-  if (event.key === ' ') {
-    if (tries > 0) {
-      // Clear the frame from the canvas
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
-      
-      // Update and draw each image
-      images.forEach((image) => {
-        // Draw the image with flipping effect
-        if (image.vx < 0) {
-          ctx.save();
-          ctx.translate(image.x + image.image.width, image.y);
-          ctx.scale(-1, 1);
-          ctx.drawImage(image.image, 0, 0);
-          ctx.restore();
-        } else {
-          ctx.drawImage(image.image, image.x, image.y);
-        }
-      });
-
-      const frameWidth = canvas.width / 3;
-      const frameHeight = canvas.height / 3;
-      const frameX = (canvas.width - frameWidth) / 2;
-      const frameY = (canvas.height - frameHeight) / 2;
-
-      const frameCanvas = document.createElement('canvas');
-      frameCanvas.width = frameWidth;
-      frameCanvas.height = frameHeight;
-      const frameCtx = frameCanvas.getContext('2d');
-      frameCtx.drawImage(canvas, frameX, frameY, frameWidth, frameHeight, 0, 0, frameWidth, frameHeight);
-      
-      let capybarasInFrame = 0;
-      images.forEach((image) => {
-        if (image.x + image.image.width > frameX && image.x < frameX + frameWidth && image.y + image.image.height > frameY && image.y < frameY + frameHeight) {
-          capybarasInFrame++;
-        }
-      });
-
-      frameCanvas.toBlob((blob) => {
-        const formData = new FormData();
-        formData.append('image', blob);
-
-        const apiKey = '52a191d08556a82';
-        const apiEndpoint = 'https://api.imgur.com/3/image';
-
-        fetch(apiEndpoint, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Client-ID ${apiKey}`,
-          },
-          body: formData,
-        })
-        .then((response) => response.json())
-        .then((data) => {
-          const imageUrl = data.data.link;
-          console.log(`Image uploaded to Imgur: ${imageUrl}`);
-          // Do something with the image URL...
-        })
-        .catch((error) => {
-          console.error('Error uploading image to Imgur:', error);
-        });
-      });
-
-      // Save the high score
-      const highScore = localStorage.getItem('highScore');
-      if (highScore === null || capybarasInFrame > highScore) {
-        console.log(capybarasInFrame);
-        localStorage.setItem('highScore', capybarasInFrame);
-      }
-
-      // Redraw the frame
-      ctx.drawImage(frame, 0, 0, frame.width, frame.height, frameX, frameY, frameWidth, frameHeight);
-
-      tries--;
-      console.log(`Tries remaining: ${tries}`);
-      flash = true;
-      flashTimeout = Date.now() + 200;
-    } else {
-      console.log('No tries remaining. Application ending.');
-      // End the application
-      window.open('', '_self').close();
-    }
+  if (event.key === ' ' && tries > 0) {
+    captureImage();
   }
 });
+
+function captureImage() {
+  // Capture the current view
+  const frameWidth = canvas.width / 3;
+  const frameHeight = canvas.height / 3;
+  const frameCanvas = document.createElement('canvas');
+  frameCanvas.width = frameWidth;
+  frameCanvas.height = frameHeight;
+  const frameCtx = frameCanvas.getContext('2d');
+  frameCtx.drawImage(canvas, frameX, frameY, frameWidth, frameHeight, 0, 0, frameWidth, frameHeight);
+  
+  let capybarasInFrame = 0;
+  images.forEach((image) => {
+    if (image.x + image.image.width > frameX && image.x < frameX + frameWidth &&
+        image.y + image.image.height > frameY && image.y < frameY + frameHeight) {
+      capybarasInFrame++;
+      // Stop the capybara from moving
+      image.vx = 0;
+      image.vy = 0;
+    }
+  });
+
+
+  frameCanvas.toBlob((blob) => {
+    const formData = new FormData();
+    formData.append('image', blob);
+
+    const apiKey = '52a191d08556a82';
+    const apiEndpoint = 'https://api.imgur.com/3/image';
+
+    fetch(apiEndpoint, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Client-ID ${apiKey}`,
+      },
+      body: formData,
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      const imageUrl = data.data.link;
+      console.log(`Image uploaded to Imgur: ${imageUrl}`);
+    })
+    .catch((error) => {
+      console.error('Error uploading image to Imgur:', error);
+    });
+  });
+
+  // Update high score
+  const highScore = localStorage.getItem('highScore');
+  if (highScore === null || capybarasInFrame > highScore) {
+    console.log(capybarasInFrame);
+    localStorage.setItem('highScore', capybarasInFrame);
+  }
+
+  // Redraw the frame
+  ctx.drawImage(frame, frameX, frameY, frame.width, frame.height);
+
+  tries--;
+  console.log(`Tries remaining: ${tries}`);
+  flash = true;
+  flashTimeout = Date.now() + 200;
+}
