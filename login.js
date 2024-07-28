@@ -127,3 +127,4 @@ const logout = () => {
 
 // when the user clicks the logout button run the logout function
 document.querySelector(".logout-btn").addEventListener("click", logout);
+document.querySelector(".game-btn").addEventListener("click", () => {window.location.href = "index.html";});
