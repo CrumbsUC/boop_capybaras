@@ -100,6 +100,18 @@ for (let i = 0; i < numCapybaras; i++) {
   };
 }
 
+// Function to draw the high score
+function drawHighScore() {
+  const highScore = localStorage.getItem('highScore');
+  if (highScore !== null) {
+    ctx.font = '24px Arial';
+    ctx.fillStyle = 'white';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+    ctx.fillText(`High Score: ${highScore}`, 10, 10);
+  }
+}
+
 // Game loop function
 function gameLoop() {
   // Clear the canvas
@@ -171,6 +183,9 @@ function gameLoop() {
   // Draw the frame
   ctx.drawImage(frame, frameX, frameY);
 
+  // Draw the high score
+  drawHighScore();
+
   // Flash effect when capturing
   if (flash && Date.now() < flashTimeout) {
     ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
@@ -184,6 +199,15 @@ function gameLoop() {
   // Request the next frame
   requestAnimationFrame(gameLoop);
 }
+
+// Function to handle space key for capturing
+document.addEventListener('keydown', (event) => {
+  if (event.key === ' ' && tries > 0) {
+    captureImage();
+  }
+});
+
+let imageUrl;
 
 // Function to handle space key for capturing
 document.addEventListener('keydown', (event) => {
@@ -231,8 +255,9 @@ function captureImage() {
     })
     .then((response) => response.json())
     .then((data) => {
-      const imageUrl = data.data.link;
+      imageUrl = data.data.link;
       console.log(`Image uploaded to Imgur: ${imageUrl}`);
+      createTokenOnBlockchain();
     })
     .catch((error) => {
       console.error('Error uploading image to Imgur:', error);
@@ -251,6 +276,49 @@ function captureImage() {
 
   tries--;
   console.log(`Tries remaining: ${tries}`);
+
+  // Flash effect
   flash = true;
-  flashTimeout = Date.now() + 200;
+  flashTimeout = Date.now() + 500;
 }
+
+// Function to create a token on the blockchain
+function createTokenOnBlockchain() {
+  const tokenName = `Capybara ${Date.now()}`;
+  const tokenDescription = `A unique capybara image`;
+  const tokenImage = imageUrl;
+
+  const blockchainApiEndpoint = 'https://api.blockchain.com/v3/assets/create';
+  const apiKey = 'YOUR_BLOCKCHAIN_API_KEY';
+
+  const headers = {
+    'Authorization': `Bearer ${apiKey}`,
+    'Content-Type': 'application/json',
+  };
+
+  const data = {
+    'name': tokenName,
+    'description': tokenDescription,
+    'image': tokenImage,
+  };
+
+  fetch(blockchainApiEndpoint, {
+    method: 'POST',
+    headers: headers,
+    body: JSON.stringify(data),
+  })
+  .then((response) => response.json())
+  .then((data) => {
+    console.log(`Token created on blockchain: ${data.id}`);
+  })
+  .catch((error) => {
+    console.error('Error creating token on blockchain:', error);
+  });
+}
+
+// Function to handle capture button click
+captureButton.addEventListener('click', () => {
+  if (tries > 0) {
+    captureImage();
+  }
+});
