@@ -170,8 +170,6 @@ document.addEventListener('keydown', (event) => {
   }
 });
 
-let imgurImageUrl;
-
 function captureImage() {
   // Capture the current view
   const frameWidth = canvas.width / 3;
@@ -209,8 +207,9 @@ function captureImage() {
     })
     .then((response) => response.json())
     .then((data) => {
-      imgurImageUrl = data.data.link;
+      const imgurImageUrl = data.data.link;
       console.log(`Image uploaded to Imgur: ${imgurImageUrl}`);
+      localStorage.setItem('imgurImageUrl', imgurImageUrl);
     })
     .catch((error) => {
       console.error('Error uploading image to Imgur:', error);
