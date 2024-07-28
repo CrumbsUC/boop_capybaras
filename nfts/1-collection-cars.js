@@ -10,9 +10,9 @@ const createCollection = async () => {
 
   // 2. Mint collection
   const {parsed} = await sdk.collection.createV2({
-    name: "cabybara capture",
-    description: "aaaa",
-    symbol: "CYR",
+    name: "Capybara Collection",
+    description: "Your favorite gaming moments from the hit game Capybara Capture!",
+    symbol: "CCC",
     cover_image: {url: "https://gateway.pinata.cloud/ipfs/QmeNzaLfsUUi5pGmhrASEpXF52deCDuByeKbU7SuZ9toEi"},
     // NOTICE: activate nesting for collection admin in order to assign achievements
     permissions: {nesting: {collectionAdmin: true}},
