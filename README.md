@@ -14,7 +14,7 @@ How many capybaras can you collect in your picture? This game tests your reactio
 # Features - 
 ***Unique network*** powered by Polkadot for minting NFTS.
 
-***Imgur API*** for immediate uploads of pictures taken.
+***Imgur API*** for immediate uploads of in-game mouments.
 
 # Demo -
 TBD
