@@ -216,15 +216,6 @@ function gameLoop() {
   requestAnimationFrame(gameLoop);
 }
 
-// Function to handle space key for capturing
-document.addEventListener('keydown', (event) => {
-  if (event.key === 'f' && tries > 0) {
-    captureImage();
-    let camera = new Audio('camera-shutter-199580.mp3');
-    camera.play();
-  }
-});
-
 let imageUrl;
 
 // Function to handle space key for capturing
