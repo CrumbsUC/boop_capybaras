@@ -14,7 +14,7 @@ Move the frame with W-A-S-D until you find the perfect shot
 
 Press space as fast as you can with as many Cabybaras
 
-The picture is uploaded to a IMGUR API 
+The picture is uploaded to a **IMGUR API**
 
 The picture is then minted into a NFT on Polkadot 
 
