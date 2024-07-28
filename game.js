@@ -203,8 +203,7 @@ function gameLoop() {
   if (flash && Date.now() < flashTimeout) {
     ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    let camera = new Audio('camera-shutter-199580.mp3');
-    camera.play();
+    
   } else {
     flash = false;
   }
@@ -221,6 +220,8 @@ function gameLoop() {
 document.addEventListener('keydown', (event) => {
   if (event.key === 'f' && tries > 0) {
     captureImage();
+    let camera = new Audio('camera-shutter-199580.mp3');
+    camera.play();
   }
 });
 
