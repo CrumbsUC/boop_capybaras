@@ -193,12 +193,6 @@ document.addEventListener('keydown', (event) => {
 });
 
 function captureImage() {
-  // Save the current canvas state
-  ctx.save();
-
-  // Hide the frame
-  ctx.clearRect(frameX, frameY, frame.width, frame.height);
-
   // Capture the current view
   const frameWidth = canvas.width / 3;
   const frameHeight = canvas.height / 3;
@@ -235,12 +229,12 @@ function captureImage() {
       },
       body: formData,
     })
-  .then((response) => response.json())
-  .then((data) => {
+    .then((response) => response.json())
+    .then((data) => {
       const imageUrl = data.data.link;
       console.log(`Image uploaded to Imgur: ${imageUrl}`);
     })
-  .catch((error) => {
+    .catch((error) => {
       console.error('Error uploading image to Imgur:', error);
     });
   });
@@ -252,9 +246,6 @@ function captureImage() {
     localStorage.setItem('highScore', capybarasInFrame);
   }
   
-  // Restore the canvas state
-  ctx.restore();
-
   // Redraw the frame
   ctx.drawImage(frame, frameX, frameY, frame.width, frame.height);
 
