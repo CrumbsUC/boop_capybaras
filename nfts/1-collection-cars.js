@@ -13,7 +13,7 @@ const createCollection = async () => {
     name: "Capybara Collection",
     description: "Your favorite gaming moments from the hit game Capybara Capture!",
     symbol: "CCC",
-    cover_image: {url: "https://gateway.pinata.cloud/ipfs/QmeNzaLfsUUi5pGmhrASEpXF52deCDuByeKbU7SuZ9toEi"},
+    cover_image: {url: "https://i.imgur.com/eojZdyZ.png"},
     // NOTICE: activate nesting for collection admin in order to assign achievements
     permissions: {nesting: {collectionAdmin: true}},
     encodeOptions: {
