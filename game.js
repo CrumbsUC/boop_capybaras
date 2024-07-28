@@ -130,7 +130,7 @@ function gameLoop() {
   // Draw the title image with current opacity
   ctx.save();
   ctx.globalAlpha = titleOpacity;
-  ctx.drawImage(titleImage, (canvas.width - titleImage.width * 3) / 2, (canvas.height - titleImage.height * 2) / 2, titleImage.width * 3, titleImage.height * 3);
+  ctx.drawImage(titleImage, (canvas.width - titleImage.width * 5) / 2, (canvas.height - titleImage.height * 4) / 2, titleImage.width * 5, titleImage.height * 5);
   ctx.restore();
   
   // Update and draw each image
