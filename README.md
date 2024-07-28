@@ -7,10 +7,11 @@ Lucca DeFulgentis, Brian Zeng, Albert Zhang, Ryan Wu
 
 ## What is Capybara Catch?
 
-How many capybaras can you collect in your picture? This game tests your reaction time and skill on taking a picture with the most capybaras. Then choose from the three pictures and mint a personal NFT.
+Capybara Catch brings a fresh take to the picture game genre, allowing gamers to capture and store their favorite in-game moments as NFTS.
 
 
 ## Instructions 
+How many capybaras can you collect in your picture? This game tests your reaction time and skill on taking a picture with the most capybaras. Then choose from the three pictures and mint a personal NFT.
 Move the frame with W-A-S-D until you find the perfect shot. Press space as fast as you can with as many Cabybaras. The picture is then minted into a NFT on Polkadot.
 
 ## Description
