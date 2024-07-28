@@ -192,6 +192,12 @@ document.addEventListener('keydown', (event) => {
   }
 });
 
+let imgurImageUrl = null;
+
+export function setImgurImageUrl(url) {
+  imgurImageUrl = url;
+}
+
 function captureImage() {
   // Capture the current view
   const frameWidth = canvas.width / 3;
@@ -215,7 +221,6 @@ function captureImage() {
     }
   });
 
-
   frameCanvas.toBlob((blob) => {
     const formData = new FormData();
     formData.append('image', blob);
@@ -234,6 +239,7 @@ function captureImage() {
     .then((data) => {
       const imageUrl = data.data.link;
       console.log(`Image uploaded to Imgur: ${imageUrl}`);
+      setImgurImageUrl(imageUrl);
     })
     .catch((error) => {
       console.error('Error uploading image to Imgur:', error);
