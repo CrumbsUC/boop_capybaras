@@ -12,11 +12,11 @@ canvas.height = window.innerHeight;
 
 // Load the background image
 const background = new Image();
-background.src = 'Background.png';
+background.src = 'Sprites/Background.png';
 
 // Load the frame image
 const frame = new Image();
-frame.src = 'Frame.png';
+frame.src = 'Sprites/Frame.png';
 
 function getRandomItem(arr) {
   // get random index value
@@ -30,10 +30,10 @@ function getRandomItem(arr) {
 
 // Define the list of capybara images
 const capybaraImages = [
-  'Witch-Capybara.png',
-  'Wizard-Capybara.png',
-  'Base-Capybara.png',
-  'TopHat-Capybara.png',
+  '/Sprites/Witch-Capybara.png',
+  'Sprites/Wizard-Capybara.png',
+  '/Sprites/Base-Capybara.png',
+  '/Sprites/TopHat-Capybara.png',
 ];
 
 // Define the number of capybaras
