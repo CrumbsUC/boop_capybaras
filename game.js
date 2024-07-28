@@ -1,14 +1,15 @@
 // Add a log statement to verify JavaScript execution
 console.log('JavaScript code is running');
 
-// DO DO DO OD DOO DO
-let mySound = new Audio('MySong.m4a')
-mySound.play()
-
 // Get the canvas element
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 const captureButton = document.getElementById('capture-button');
+
+// DO DO DO OD DOO DO
+let bgMusic = new Audio('MySong.m4a')
+bgMusic.loop = true;
+bgMusic.play()
 
 // Set the canvas dimensions to fit the window
 canvas.width = window.innerWidth;
@@ -21,6 +22,7 @@ background.src = 'Sprites/Background.png';
 // Load the frame image
 const frame = new Image();
 frame.src = 'Sprites/Frame.png';
+
 
 function getRandomItem(arr) {
   // get random index value
