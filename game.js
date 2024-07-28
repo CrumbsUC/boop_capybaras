@@ -1,6 +1,10 @@
 // Add a log statement to verify JavaScript execution
 console.log('JavaScript code is running');
 
+// DO DO DO OD DOO DO
+let mySound = new Audio('MySong.m4a')
+mySound.play()
+
 // Get the canvas element
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -13,11 +17,6 @@ canvas.height = window.innerHeight;
 // Load the background image
 const background = new Image();
 background.src = 'Sprites/Background.png';
-
-
-// DO DO DO OD DOO DO
-let mySound = new Audio('MySong.m4a')
-mySound.play()
 
 // Load the frame image
 const frame = new Image();
@@ -44,7 +43,7 @@ const capybaraImages = [
 ];
 
 // Define the number of capybaras
-const numCapybaras = 10;
+const numCapybaras = 30;
 
 // Define the image objects
 const images = [];
