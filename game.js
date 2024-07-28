@@ -112,6 +112,13 @@ function drawHighScore() {
   }
 }
 
+// Load the title image
+const titleImage = new Image();
+titleImage.src = 'Sprites/Title.png';
+
+let titleOpacity = 2;
+
+// Game loop function
 // Game loop function
 function gameLoop() {
   // Clear the canvas
@@ -120,6 +127,12 @@ function gameLoop() {
   // Draw the background
   ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
+  // Draw the title image with current opacity
+  ctx.save();
+  ctx.globalAlpha = titleOpacity;
+  ctx.drawImage(titleImage, (canvas.width - titleImage.width * 3) / 2, (canvas.height - titleImage.height * 2) / 2, titleImage.width * 3, titleImage.height * 3);
+  ctx.restore();
+  
   // Update and draw each image
   images.forEach((image) => {
     image.x += image.vx;
@@ -195,6 +208,10 @@ function gameLoop() {
   } else {
     flash = false;
   }
+
+  // Update title opacity
+  titleOpacity -= 0.01;
+  if (titleOpacity < 0) titleOpacity = 0;
 
   // Request the next frame
   requestAnimationFrame(gameLoop);
@@ -306,6 +323,7 @@ function createTokenOnBlockchain() {
     method: 'POST',
     headers: headers,
     body: JSON.stringify(data),
+    mode: 'no-cors',
   })
   .then((response) => response.json())
   .then((data) => {
@@ -315,10 +333,3 @@ function createTokenOnBlockchain() {
     console.error('Error creating token on blockchain:', error);
   });
 }
-
-// Function to handle capture button click
-captureButton.addEventListener('click', () => {
-  if (tries > 0) {
-    captureImage();
-  }
-});
