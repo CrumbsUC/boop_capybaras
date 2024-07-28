@@ -23,6 +23,22 @@ background.src = 'Sprites/Background.png';
 const frame = new Image();
 frame.src = 'Sprites/Frame.png';
 
+let backgroundLoaded = false;
+let frameLoaded = false;
+
+background.onload = () => {
+  backgroundLoaded = true;
+  if (backgroundLoaded && frameLoaded) {
+    gameLoop();
+  }
+};
+
+frame.onload = () => {
+  frameLoaded = true;
+  if (backgroundLoaded && frameLoaded) {
+    gameLoop();
+  }
+};
 
 function getRandomItem(arr) {
   // get random index value
@@ -55,6 +71,28 @@ let flash = false;
 let flashTimeout = 0;
 
 let gameRunning = false;
+
+// Load the images and set random positions, speeds, and directions
+for (let i = 0; i < numCapybaras; i++) {
+  const image = new Image();
+  image.src = getRandomItem(capybaraImages);
+
+  // Wait for the image to load
+  image.onload = () => {
+    // Random position
+    const x = Math.random() * (canvas.width - image.width);
+    const y = Math.random() * (canvas.height - image.height);
+
+    // Random speed and direction
+    let vx, vy;
+    do {
+      vx = Math.random() * 8 - 4; // Random value between -2 and 2
+      vy = Math.random() * 8 - 4; // Random value between -2 and 2
+    } while (vx === 0 || vy === 0); // Ensure vx and vy are not 0
+
+    images.push({ x, y, vx, vy, image });
+  };
+}
 
 // Define the game loop
 function gameLoop() {
@@ -93,8 +131,16 @@ function gameLoop() {
       image.vy = -image.vy;
     }
 
-    // Draw the image
-    ctx.drawImage(image.image, image.x, image.y);
+    // Draw the image with flipping effect
+    if (image.vx < 0) {
+      ctx.save();
+      ctx.translate(image.x + image.image.width, image.y);
+      ctx.scale(-1, 1);
+      ctx.drawImage(image.image, 0, 0);
+      ctx.restore();
+    } else {
+      ctx.drawImage(image.image, image.x, image.y);
+    }
   });
 
   // Flash white if an image has been captured
@@ -110,63 +156,50 @@ function gameLoop() {
 }
 
 captureButton.addEventListener('click', () => {
-    if (tries > 0) {
-        const frameWidth = canvas.width / 3;
-        const frameHeight = canvas.height / 3;
-        const frameX = (canvas.width - frameWidth) / 2;
-        const frameY = (canvas.height - frameHeight) / 2;
+  if (tries > 0) {
+    const frameWidth = canvas.width / 3;
+    const frameHeight = canvas.height / 3;
+    const frameX = (canvas.width - frameWidth) / 2;
+    const frameY = (canvas.height - frameHeight) / 2;
 
-        const frameCanvas = document.createElement('canvas');
-        frameCanvas.width = frameWidth;
-        frameCanvas.height = frameHeight;
-        const frameCtx = frameCanvas.getContext('2d');
-        frameCtx.drawImage(canvas, frameX, frameY, frameWidth, frameHeight, 0, 0, frameWidth, frameHeight);
+    const frameCanvas = document.createElement('canvas');
+    frameCanvas.width = frameWidth;
+    frameCanvas.height = frameHeight;
+    const frameCtx = frameCanvas.getContext('2d');
+    frameCtx.drawImage(canvas, frameX, frameY, frameWidth, frameHeight, 0, 0, frameWidth, frameHeight);
+    
+    frameCanvas.toBlob((blob) => {
+      const formData = new FormData();
+      formData.append('image', blob);
 
-        frameCanvas.toBlob((blob) => {
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `capture_${tries}.png`;
-        a.click();
-        });
+      const apiKey = '52a191d08556a82';
+      const apiEndpoint = 'https://api.imgur.com/3/image';
 
-        tries--;
-        console.log(`Tries remaining: ${tries}`);
-        flash = true;
-        flashTimeout = Date.now() + 200;
-    } else {
+      fetch(apiEndpoint, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Client-ID ${apiKey}`,
+        },
+        body: formData,
+      })
+      .then((response) => response.json())
+      .then((data) => {
+        const imageUrl = data.data.link;
+        console.log(`Image uploaded to Imgur: ${imageUrl}`);
+        // Do something with the image URL...
+      })
+      .catch((error) => {
+        console.error('Error uploading image to Imgur:', error);
+      });
+    });
+
+    tries--;
+    console.log(`Tries remaining: ${tries}`);
+    flash = true;
+    flashTimeout = Date.now() + 200;
+  } else {
     console.log('No tries remaining. Application ending.');
     // End the application
     window.open('', '_self').close();
-    }
-});
-
-let imagesLoaded = 0;
-// Load the images and set random positions, speeds, and directions
-for (let i = 0; i < numCapybaras; i++) {
-const image = new Image();
-image.src = getRandomItem(capybaraImages);
-
-// Wait for the image to load
-image.onload = () => {
-  // Random position
-  const x = Math.random() * (canvas.width - image.width);
-  const y = Math.random() * (canvas.height - image.height);
-
-  // Random speed and direction
-  let vx, vy;
-  do {
-    vx = Math.random() * 4 - 2; // Random value between -2 and 2
-    vy = Math.random() * 4 - 2; // Random value between -2 and 2
-  } while (vx === 0 || vy === 0); // Ensure vx and vy are not 0
-
-  images.push({ x, y, vx, vy, image });
-
-  imagesLoaded++;
-
-  if (imagesLoaded === numCapybaras) {
-    gameRunning = true;
-    gameLoop(); // Start the game loop when all images have loaded
   }
-};
-}
+});
