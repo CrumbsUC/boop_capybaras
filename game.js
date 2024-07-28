@@ -219,7 +219,7 @@ function gameLoop() {
 
 // Function to handle space key for capturing
 document.addEventListener('keydown', (event) => {
-  if (event.key === ' ' && tries > 0) {
+  if (event.key === 'f' && tries > 0) {
     captureImage();
   }
 });
