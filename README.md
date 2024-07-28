@@ -24,7 +24,13 @@ NFTs are widely viewed as a monetary investment. We want to shift the focus of N
 ***Imgur API*** for immediate uploads of in-game mouments.
 
 # Demo -
-TBD
+
+DEMO VIDEO - 
+https://www.youtube.com/watch?v=-MAp9R-ezh8
+
+Audio Video - 
+https://www.youtube.com/watch?v=br4Kd9H_iOg&feature=youtu.be
+
 
 
 # Game Screenshots -
@@ -37,9 +43,3 @@ TBD
 CANVA Presentation-
 https://www.canva.com/design/DAGMMlDnk4c/A77NBan2I4-5cyiU-Xoj5w/edit?utm_content=DAGMMlDnk4c&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
 
-
-DEMO VIDEO - 
-https://www.youtube.com/watch?v=-MAp9R-ezh8
-
-Audio Video - 
-https://www.youtube.com/watch?v=br4Kd9H_iOg&feature=youtu.be
