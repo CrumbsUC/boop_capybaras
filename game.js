@@ -86,9 +86,9 @@ for (let i = 0; i < numCapybaras; i++) {
     // Random speed and direction
     let vx, vy;
     do {
-      vx = Math.random() * 8 - 4; // Random value between -2 and 2
-      vy = Math.random() * 8 - 4; // Random value between -2 and 2
-    } while (vx === 0 || vy === 0); // Ensure vx and vy are not 0
+      vx = Math.random() * 8 - 4;
+      vy = Math.random() * 8 - 4;
+    } while (Math.abs(vx) < 2 || Math.abs(vy) < 2); // Ensure vx and vy are not 0
 
     images.push({ x, y, vx, vy, image });
   };
@@ -155,51 +155,88 @@ function gameLoop() {
   requestAnimationFrame(gameLoop);
 }
 
-captureButton.addEventListener('click', () => {
-  if (tries > 0) {
-    const frameWidth = canvas.width / 3;
-    const frameHeight = canvas.height / 3;
-    const frameX = (canvas.width - frameWidth) / 2;
-    const frameY = (canvas.height - frameHeight) / 2;
-
-    const frameCanvas = document.createElement('canvas');
-    frameCanvas.width = frameWidth;
-    frameCanvas.height = frameHeight;
-    const frameCtx = frameCanvas.getContext('2d');
-    frameCtx.drawImage(canvas, frameX, frameY, frameWidth, frameHeight, 0, 0, frameWidth, frameHeight);
-    
-    frameCanvas.toBlob((blob) => {
-      const formData = new FormData();
-      formData.append('image', blob);
-
-      const apiKey = '52a191d08556a82';
-      const apiEndpoint = 'https://api.imgur.com/3/image';
-
-      fetch(apiEndpoint, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Client-ID ${apiKey}`,
-        },
-        body: formData,
-      })
-      .then((response) => response.json())
-      .then((data) => {
-        const imageUrl = data.data.link;
-        console.log(`Image uploaded to Imgur: ${imageUrl}`);
-        // Do something with the image URL...
-      })
-      .catch((error) => {
-        console.error('Error uploading image to Imgur:', error);
+document.addEventListener('keydown', (event) => {
+  if (event.key === ' ') {
+    if (tries > 0) {
+      // Clear the frame from the canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+      
+      // Update and draw each image
+      images.forEach((image) => {
+        // Draw the image with flipping effect
+        if (image.vx < 0) {
+          ctx.save();
+          ctx.translate(image.x + image.image.width, image.y);
+          ctx.scale(-1, 1);
+          ctx.drawImage(image.image, 0, 0);
+          ctx.restore();
+        } else {
+          ctx.drawImage(image.image, image.x, image.y);
+        }
       });
-    });
 
-    tries--;
-    console.log(`Tries remaining: ${tries}`);
-    flash = true;
-    flashTimeout = Date.now() + 200;
-  } else {
-    console.log('No tries remaining. Application ending.');
-    // End the application
-    window.open('', '_self').close();
+      const frameWidth = canvas.width / 3;
+      const frameHeight = canvas.height / 3;
+      const frameX = (canvas.width - frameWidth) / 2;
+      const frameY = (canvas.height - frameHeight) / 2;
+
+      const frameCanvas = document.createElement('canvas');
+      frameCanvas.width = frameWidth;
+      frameCanvas.height = frameHeight;
+      const frameCtx = frameCanvas.getContext('2d');
+      frameCtx.drawImage(canvas, frameX, frameY, frameWidth, frameHeight, 0, 0, frameWidth, frameHeight);
+      
+      let capybarasInFrame = 0;
+      images.forEach((image) => {
+        if (image.x + image.image.width > frameX && image.x < frameX + frameWidth && image.y + image.image.height > frameY && image.y < frameY + frameHeight) {
+          capybarasInFrame++;
+        }
+      });
+
+      frameCanvas.toBlob((blob) => {
+        const formData = new FormData();
+        formData.append('image', blob);
+
+        const apiKey = '52a191d08556a82';
+        const apiEndpoint = 'https://api.imgur.com/3/image';
+
+        fetch(apiEndpoint, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Client-ID ${apiKey}`,
+          },
+          body: formData,
+        })
+        .then((response) => response.json())
+        .then((data) => {
+          const imageUrl = data.data.link;
+          console.log(`Image uploaded to Imgur: ${imageUrl}`);
+          // Do something with the image URL...
+        })
+        .catch((error) => {
+          console.error('Error uploading image to Imgur:', error);
+        });
+      });
+
+      // Save the high score
+      const highScore = localStorage.getItem('highScore');
+      if (highScore === null || capybarasInFrame > highScore) {
+        console.log(capybarasInFrame);
+        localStorage.setItem('highScore', capybarasInFrame);
+      }
+
+      // Redraw the frame
+      ctx.drawImage(frame, 0, 0, frame.width, frame.height, frameX, frameY, frameWidth, frameHeight);
+
+      tries--;
+      console.log(`Tries remaining: ${tries}`);
+      flash = true;
+      flashTimeout = Date.now() + 200;
+    } else {
+      console.log('No tries remaining. Application ending.');
+      // End the application
+      window.open('', '_self').close();
+    }
   }
 });
