@@ -119,7 +119,6 @@ titleImage.src = 'Sprites/Title.png';
 let titleOpacity = 2;
 
 // Game loop function
-// Game loop function
 function gameLoop() {
   // Clear the canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -220,12 +219,29 @@ let imageUrl;
 
 // Function to handle space key for capturing
 document.addEventListener('keydown', (event) => {
-  if (event.key === ' ' && tries > 0) {
+  if (event.key === 'f' && tries > 0) {
+    // Clear the frame from the canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+    
+    // Update and draw each image
+    images.forEach((image) => {
+      // Draw the image with flipping effect
+      if (image.vx < 0) {
+        ctx.save();
+        ctx.translate(image.x + image.image.width, image.y);
+        ctx.scale(-1, 1);
+        ctx.drawImage(image.image, 0, 0);
+        ctx.restore();
+      } else {
+        ctx.drawImage(image.image, image.x, image.y);
+      }
+    });
     captureImage();
   }
 });
 
-function captureImage() {
+function captureImage() {  
   // Capture the current view
   const frameWidth = canvas.width / 3;
   const frameHeight = canvas.height / 3;
